@@ -1,0 +1,25 @@
+version: '3.6'
+
+#
+# Test by:
+# 'npm run test-unit-in-docker'
+#
+
+services:
+  # Start an instance of the build image
+  api:
+    image: $LOCAL_IMAGE_ID
+
+    #
+    # Mount the catalog that contains the tests.
+    # The volume mount is done at startup, and does not affect the image itself.
+    #
+    volumes:
+      - ./test:/application/test
+
+    # TTY is old unix lingo, meaning that you get colors in the output.
+    tty: true
+
+    # Override the CMD command in Dockerfile and instead run this
+    # when the instance starts.
+    command: ['sh', '-c', 'npm install --development && npm test']

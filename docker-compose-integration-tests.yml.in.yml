@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  api:
+    image: $LOCAL_IMAGE_ID
+    environment:
+      DB_URL: 'mongodb://db:4444'
+      DB_USER: 'admin'
+      MONGODB_CONNECTION_STRING: mongodb://root:password@db:10255/database?ssl=true
+    ports:
+      - 3001
+    depends_on:
+      - db
+
+  db:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+    ports:
+      - 4444
+
+  # Run curl commands from integration-tests against http://api:3001
+  integration-tests:
+    build: ./test/integration-tests
+    depends_on:
+      - api
